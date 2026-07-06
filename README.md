@@ -1,15 +1,14 @@
-# Chronicle | Modern News Parser
+# Chronicle | News Parser
 
-Chronicle is a professional, clean, and responsive Node.js web application that connects to the NewsAPI to retrieve and parse global articles matching your keywords, date ranges, and language preferences.
+Chronicle is a clean, and responsive Node.js web application that connects to the NewsAPI to retrieve and parse global articles matching your keywords, date ranges, and language preferences.
 
 ---
 
 ## Features
 
-- **Modern Visuals**: Designed with a sleek, light slate theme, customizable input fields, elegant search hero, and a responsive grid layout of news cards with hover zoom animations.
+- **Modern Visuals**: Designed with a light slate theme, customizable input fields, elegant search hero, and a responsive grid layout of news cards with hover zoom animations.
 - **Client & Server-Side Error Handling**: Native browser date pickers set with a 30-day lookback boundary matching NewsAPI's developer plan restrictions, accompanied by custom error banner notifications for API issues or missing inputs.
-- **Robust API Key Protection**: Keeps credentials safe by loading variables locally using a secure `.env` file structure.
-- **Fallback Content**: Beautiful CSS image placeholders for articles missing cover images, or image source load failures.
+- **Fallback Content**: CSS image placeholders for articles missing cover images, or image source load failures.
 
 ---
 
@@ -31,7 +30,7 @@ Before running this application, you must have the following installed:
    ```
 
 2. **Configure environment variables**:
-   Create a `.env` file in the root of the project (this is ignored by Git using the `.gitignore` setup).
+   Create a `.env` file in the root of the project.
    Add the following configuration (replace `YOUR_NEWS_API_KEY` with your actual NewsAPI key):
    ```env
    PORT=3000
@@ -44,7 +43,7 @@ Before running this application, you must have the following installed:
 ## Running the Application
 
 ### Development Mode (with Auto-Reload)
-This project uses `nodemon` to automatically restart the server when files are edited:
+Use `nodemon` to automatically restart the server when files are edited:
 ```bash
 npm run dev
 ```
