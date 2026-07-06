@@ -1,0 +1,73 @@
+<%- include('partials/header.ejs') %>
+
+<div class="results-header">
+    <h2>Search Results</h2>
+    <p class="subtitle">Found <%= content.length %> articles matching your criteria.</p>
+    <a href="/" class="back-btn">&larr; Search Again</a>
+</div>
+
+<!-- Articles Grid Layout -->
+<div class="articles-grid">
+    <% for (let i = 0; i < content.length; i++) { %>
+        <% const article = content[i]; %>
+        <!-- Single Article Card -->
+        <article class="news-card">
+            
+            <!-- Card Visual Header -->
+            <div class="card-image-wrapper">
+                <% if (article.urlToImage) { %>
+                    <!-- Render image and attach an onerror fallback in case the URL expires or fails to load -->
+                    <img src="<%= article.urlToImage %>" alt="<%= article.title %>" class="card-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <div class="card-image-fallback" style="display: none;">
+                        <span class="fallback-icon">📰</span>
+                    </div>
+                <% } else { %>
+                    <!-- Fallback if NewsAPI returns no image URL -->
+                    <div class="card-image-fallback">
+                        <span class="fallback-icon">📰</span>
+                    </div>
+                <% } %>
+                
+                <!-- Publisher Source Badge -->
+                <% if (article.source && article.source.name) { %>
+                    <span class="source-badge"><%= article.source.name %></span>
+                <% } %>
+            </div>
+
+            <!-- Card Text Content Body -->
+            <div class="card-body">
+                <!-- Meta data: Date and Author -->
+                <div class="card-meta">
+                    <% if (article.publishedAt) { %>
+                        <span class="card-date"><%= new Date(article.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+                    <% } %>
+                    <% if (article.author) { %>
+                        <span class="card-author">&bull; <%= article.author.substring(0, 25) %><%= article.author.length > 25 ? '...' : '' %></span>
+                    <% } %>
+                </div>
+                
+                <!-- Headline -->
+                <h3 class="card-title" title="<%= article.title %>">
+                    <%= article.title %>
+                </h3>
+                
+                <!-- Summary/Description -->
+                <p class="card-description">
+                    <%= article.description || 'No description preview available. Click read full article below to read more details on the publisher site.' %>
+                </p>
+                
+                <!-- Outbound Link to Full Article -->
+                <a href="<%= article.url %>" target="_blank" rel="noopener noreferrer" class="read-more-btn">
+                    Read Full Article <span class="arrow">&rarr;</span>
+                </a>
+            </div>
+        </article>
+    <% }; %>
+</div>
+
+<!-- Back to Search Action Footer -->
+<div class="results-footer">
+    <a href="/" class="back-btn secondary">&larr; Back to Search</a>
+</div>
+
+<%- include('partials/footer.ejs') %>

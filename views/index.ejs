@@ -1,0 +1,118 @@
+<%- include('partials/header.ejs') %>
+
+<!-- Hero section describing the tool -->
+<div class="search-hero">
+    <h1>Search Global News Instantly</h1>
+    <p class="subtitle">Enter a keyword, specify dates, select language, and fetch articles from over 80,000 news sources.</p>
+</div>
+
+<div class="container">
+    <!-- User-relevant API or Form Error Banner -->
+    <% if (error) { %>
+        <div class="error-alert">
+            <div class="error-icon">⚠️</div>
+            <div class="error-content">
+                <h4 class="error-title">Search Error</h4>
+                <p class="error-message"><%= error %></p>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- News Search Form Card -->
+    <div class="form-card">
+        <form action="/news" method="POST" id="searchForm">
+            <!-- Keyword search input -->
+            <div class="form-group full-width">
+                <label for="topic">Keyword or Topic</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔍</span>
+                    <input type="text" id="topic" name="topic" placeholder="e.g., Artificial Intelligence, Climate Change..." required />
+                </div>
+            </div>
+
+            <!-- Date parameters grid -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="from">From Date</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📅</span>
+                        <input type="date" id="from" name="from" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="to">To Date</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📅</span>
+                        <input type="date" id="to" name="to" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Language select input -->
+            <div class="form-group">
+                <label for="language">Language</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🌐</span>
+                    <select id="language" name="language" required>
+                        <option value="en" selected>English (EN)</option>
+                        <option value="es">Spanish (ES)</option>
+                        <option value="fr">French (FR)</option>
+                        <option value="de">German (DE)</option>
+                        <option value="it">Italian (IT)</option>
+                        <option value="nl">Dutch (NL)</option>
+                        <option value="pt">Portuguese (PT)</option>
+                        <option value="ru">Russian (RU)</option>
+                        <option value="zh">Chinese (ZH)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Search News</button>
+        </form>
+    </div>
+</div>
+
+<!-- Clientside dynamic validation and default value handling script -->
+<script>
+    // NewsAPI free tier limits searches to the last 30 days.
+    // Setting min/max restricts users from making invalid queries that trigger API errors.
+    const today = new Date();
+    const thirtyDaysAgo = new Date();
+    // Allow up to 28 days in the past to avoid timezone overlap edge cases with the 30-day limit
+    thirtyDaysAgo.setDate(today.getDate() - 28); 
+    
+    // Set default starting date to 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 7);
+
+    const formatDate = (date) => date.toISOString().split('T')[0];
+
+    const fromInput = document.getElementById('from');
+    const toInput = document.getElementById('to');
+
+    // 1. Bound date pickers: Cannot pick future dates
+    fromInput.max = formatDate(today);
+    toInput.max = formatDate(today);
+
+    // 2. Bound date pickers: Cannot pick dates older than 30 days (NewsAPI Developer Plan Constraint)
+    fromInput.min = formatDate(thirtyDaysAgo);
+    toInput.min = formatDate(thirtyDaysAgo);
+
+    // 3. Set default dates on load
+    fromInput.value = formatDate(sevenDaysAgo);
+    toInput.value = formatDate(today);
+
+    // 4. Client-side sanity validation for date ranges
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+        const fromVal = new Date(fromInput.value);
+        const toVal = new Date(toInput.value);
+
+        if (fromVal > toVal) {
+            e.preventDefault();
+            alert('The "From" date cannot be after the "To" date.');
+        }
+    });
+</script>
+
+<%- include('partials/footer.ejs') %>
